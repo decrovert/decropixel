@@ -1,9 +1,11 @@
 if not __name__ == "__main__":
     exit("Don't run Decropixel as a library!")
 
+from audioop import bias
 import sys
 import random; random.seed()
 import typing
+import json
 
 ARGV_LENGTH: typing.Sized = len(sys.argv)
 
@@ -14,7 +16,7 @@ elif ARGV_LENGTH > 2:
 
 del ARGV_LENGTH
 
-DATA_FILE_NAME: str = "data.txt"
+DATA_FILE_NAME: str = "data.json"
 LICENSE_FILE_NAME: str = "LICENSE"
 
 IMAGE_WIDTH: int = 8
@@ -33,14 +35,34 @@ class NeuralNetwork:
         self.layers = []
         self.connections = []
 
-        for i in range(NETWORK_SIZE):
-            self.layers.append([])
-            
-            for _ in range(IMAGE_SIZE):
-                self.layers[i].append(Neuron(0.0, random.random() * 2 - 1))
+        try:
+            with open(DATA_FILE_NAME, "r") as data_file:
+                data_file_json = data_file.read()
+                data_structure = json.loads(data_file_json)
+                del data_file_json
 
-        for i in range((len(self.layers) - 1) * (IMAGE_SIZE ** 2)):
-            self.connections.append(random.random() * 2 - 1)
+                bias_index: typing.Sized = 0
+
+                for i in range(NETWORK_SIZE):
+                    self.layers.append([])
+                
+                    for _ in range(IMAGE_SIZE):
+                        self.layers[i].append(Neuron(0.0, data_structure[0][bias_index]))
+                        bias_index += 1
+                
+                del bias_index
+
+                for i in range((len(self.layers) - 1) * (IMAGE_SIZE ** 2)):
+                    self.connections.append(data_structure[1][i])
+        except:
+            for i in range(NETWORK_SIZE):
+                self.layers.append([])
+                
+                for _ in range(IMAGE_SIZE):
+                    self.layers[i].append(Neuron(0.0, random.random() * 2 - 1))
+
+            for i in range((len(self.layers) - 1) * (IMAGE_SIZE ** 2)):
+                self.connections.append(random.random() * 2 - 1)
     
     def populate_input_neurons(self) -> None:
         for i in range(len(self.layers[0])):
@@ -75,6 +97,18 @@ class NeuralNetwork:
         self.populate_input_neurons()
         self.produce_output_image()
         return self.get_output_image()
+    
+    def get_training_data(self) -> str:
+        training_data: tuple[list[float], list[float]] = ([], [])
+
+        for layer in self.layers:
+            for neuron in layer:
+                training_data[0].append(neuron.bias)
+        
+        for connection in self.connections:
+            training_data[1].append(connection)
+
+        return json.dumps(training_data, indent = 4)
 
 neural_network = NeuralNetwork()
 
@@ -116,6 +150,10 @@ def train_AI() -> None:
 
         if not input("Do you wish to continue training the AI? [y]es/[n]o: ") == "y":
             draw_another = False
+    
+    if input("Do you wish to save the training data? [y]es/[n]o: ") == "y":
+        with open(DATA_FILE_NAME, "w") as data_file:
+            data_file.write(neural_network.get_training_data())
 
 def reset_AI_data() -> None:
     print("This command will reset all the AI training data!")
@@ -147,6 +185,9 @@ match sys.argv[1]:
 
         print("train:")
         print("\tTrain AI.")
+
+        print("load:")
+        print("\tLoad saved AI training data.")
 
         print("reset:")
         print("\tReset all knowledge data.")
