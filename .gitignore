@@ -1,2 +1,5 @@
 # AI training data
 data.json
+
+# Python cache
+**/__pycache__
