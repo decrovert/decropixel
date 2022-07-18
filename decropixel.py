@@ -3,16 +3,41 @@ if not __name__ == "__main__":
 
 import sys
 
-argv_length = len(sys.argv)
+ARGV_LENGTH = len(sys.argv)
 
-if argv_length == 1:
-    print("Use the \'help\' option for help!")
-    exit()
-elif argv_length > 2:
-    print("Too many options!")
-    exit()
+if ARGV_LENGTH == 1:
+    exit("Use the \'help\' option for help!")
+elif ARGV_LENGTH > 2:
+    exit("Too many options!")
 
-del argv_length
+del ARGV_LENGTH
+
+DATA_FILE_NAME = "data.txt"
+LICENSE_FILE_NAME = "LICENSE"
+
+def reset_AI_data() -> None:
+    print("This command will reset all the AI training data!")
+    confirmation = input("Are you sure you wish to continue? [y]es/[n]o: ")
+
+    if not confirmation == "y":
+        return
+
+    print("Resetting all the data...")
+
+    try:
+        with open(DATA_FILE_NAME, "w") as data_file:
+            pass
+    except:
+        exit("Unable to open the data file to reset it!")
+
+    print("The data was reset!")
+
+def print_license_information() -> None:
+    try:
+        with open(LICENSE_FILE_NAME, "r") as license_file:
+            print(license_file.read())
+    except:
+        exit("Unable to read the license file!")
 
 match sys.argv[1]:
     case "help":
@@ -32,10 +57,12 @@ match sys.argv[1]:
         print("Train AI")
     
     case "reset":
-        print("Reset AI")
+        reset_AI_data()
     
     case "license":
-        print("License information")
-    
+        print_license_information()
+
     case default:
         print("Unknown option! Use \'help\' for help!")
+
+exit()
