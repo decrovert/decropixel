@@ -34,7 +34,22 @@ def train_AI(trainee: AI.AI) -> None:
     while draw_another:
         print(format_AI_image(trainee.draw_image(), trainee))
 
-        cool = input("Was this cool? [y]es/[n]o: ")
+        coolness = input("How cool was this? 0..10: ")
+        coolness_float: float = 0.0
+
+        try:
+            coolness_float = float(coolness)
+            
+            if coolness_float < 0.0:
+                coolness_float = 0.0
+            elif coolness_float > 10.0:
+                coolness_float = 10.0
+
+            trainee.neural_network.apply_feedback(coolness_float)
+        except:
+            print("Error parsing a decimal number. Discarding evaluation...")
+        
+        del coolness, coolness_float
 
         if not input("Do you wish to continue training the AI? [y]es/[n]o: ") == "y":
             draw_another = False
@@ -54,7 +69,6 @@ def reset_AI_data(target: AI.AI) -> None:
     try:
         with open(target.neural_network.DATA_FILE_NAME, "w"):
             pass
-
     except:
         exit("Unable to open the data file to reset it!")
 
@@ -64,6 +78,5 @@ def print_license_information() -> None:
     try:
         with open("LICENSE", "r") as license_file:
             print(license_file.read())
-
     except:
         exit("Unable to read the license file!")
