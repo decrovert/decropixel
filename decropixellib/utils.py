@@ -4,25 +4,25 @@ def format_AI_image(image: list[bool], author: AI.AI) -> str:
     formatted_image: str = ""
 
     for _ in range(author.neural_network.IMAGE_WIDTH + 2):
-        formatted_image += "-"
+        formatted_image += "- "
 
     formatted_image += "\n"
 
     for y in range(author.neural_network.IMAGE_HEIGHT):
         for x in range(author.neural_network.IMAGE_WIDTH):
             if x == 0:
-                formatted_image += "|"
+                formatted_image += "| "
 
             match image[y * author.neural_network.IMAGE_WIDTH + x]:
                 case True:
-                    formatted_image += "#"
+                    formatted_image += "# "
                 case False:
-                    formatted_image += " "
+                    formatted_image += "  "
         
         formatted_image += "|\n"
     
     for _ in range(author.neural_network.IMAGE_WIDTH + 2):
-        formatted_image += "-"
+        formatted_image += "- "
 
     return formatted_image
 
