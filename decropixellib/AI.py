@@ -50,7 +50,7 @@ class NeuralNetwork:
                 self.connections.append(random.random() * 2 - 1)
     
     def populate_input_neurons(self) -> None:
-        for i in range(len(self.layers[0])):
+        for i in range(self.IMAGE_SIZE):
             self.layers[0][i].stimulation = random.random() * 2 - 1
     
     def rewire_connections(self) -> None:
@@ -91,6 +91,28 @@ class NeuralNetwork:
                     neuron.bias += -feedback_adapted
                 elif neuron.bias > 0:
                     neuron.bias += feedback_adapted
+    
+    def learn_image(self, image: list[bool]) -> None:
+        for i in range(self.IMAGE_SIZE):
+            self.layers[self.NETWORK_SIZE - 1][i].stimulation = float(image[i]) - 0.5
+        
+        self.rewire_connections()
+
+        layer: typing.Sized = self.NETWORK_SIZE - 2
+        connection_index: typing.Sized = len(self.connections) - 1
+
+        while layer > 0:
+            for neuron in range(self.IMAGE_SIZE):
+                neuron_stimulation: float = self.layers[layer + 1][neuron].stimulation
+
+                for _ in reversed(range(self.IMAGE_SIZE)):
+                    neuron_stimulation += self.connections[connection_index]
+                    connection_index -= 1
+                
+                neuron_stimulation += self.layers[layer][neuron].bias
+                self.layers[layer][neuron].stimulation = neuron_stimulation
+
+            layer -= 1
 
 class AI:
     def __init__(self, IMAGE_WIDTH: typing.Sized, IMAGE_HEIGHT: typing.Sized, DATA_FILE_NAME: str):

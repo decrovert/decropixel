@@ -25,6 +25,9 @@ match sys.argv[1]:
         print("train:")
         print("\tTrain AI.")
 
+        print("teach:")
+        print("\tShow the AI an image to learn.")
+
         print("reset:")
         print("\tReset all knowledge data.")
 
@@ -33,6 +36,9 @@ match sys.argv[1]:
 
     case "train":
         utils.train_AI(artificial_intelligence)
+    
+    case "teach":
+        utils.teach_AI(artificial_intelligence)
     
     case "reset":
         utils.reset_AI_data(artificial_intelligence)
