@@ -40,6 +40,9 @@ class NeuralNetwork:
                 for i in range((len(self.layers) - 1) * (self.IMAGE_SIZE ** 2)):
                     self.connections.append(data_structure[1][i])
         except:
+            self.layers = []
+            self.connections = []
+
             for i in range(self.NETWORK_SIZE):
                 self.layers.append([])
                 
@@ -117,7 +120,7 @@ class NeuralNetwork:
 
 class AI:
     def __init__(self, IMAGE_WIDTH: typing.Sized, IMAGE_HEIGHT: typing.Sized, DATA_FILE_NAME: str):
-        self.neural_network = NeuralNetwork(IMAGE_WIDTH, IMAGE_HEIGHT, 8, DATA_FILE_NAME)
+        self.neural_network = NeuralNetwork(IMAGE_WIDTH, IMAGE_HEIGHT, 18, DATA_FILE_NAME)
 
     def draw_image(self) -> list[bool]:
         self.neural_network.populate_input_neurons()
