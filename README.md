@@ -1,11 +1,11 @@
 # Decropixel
-
 ## Overview
 Decropixel is an artificial intelligence
 which draws simple pixel art and
 uses feedback to improve its neural network.
 
 ## Technical details
+### Introduction
 The neural network contains an **input layer**,
 an **output layer** and some **layers in between**.
 Layers are no more than **arrays** of **neuron structures**.
@@ -13,6 +13,7 @@ Each **neuron** has a **connection** to
 every other neuron in the next and previous layers,
 if these exist.
 
+### Neurons and stimulus transmission
 Neurons can be **stimulated** with a certain level of stimulus.
 When a neuron is fired,
 it **passes** its stimulation
@@ -27,6 +28,7 @@ for the same stimuli,
 it would **always** produce the same behaviour.
 Therefore, this is where the other factors come into play.
 
+### Connection strengths
 First, there are **connection strengths**.
 These will determine **how much** of the stimulus will
 actually be passed onto the next neuron.
@@ -35,6 +37,7 @@ which can be **adjusted** to be stronger or weaker,
 depending on the **feedback** given
 to the artificial intelligence.
 
+### Biases
 Then, there are **biases**.
 Each neuron has a certain bias,
 which represents a value that is
@@ -43,6 +46,7 @@ which represents a value that is
 These can also be **adjusted** with relation to
 the feedback received.
 
+### Conclusion
 The neurons, their biases
 and the connections they form between each other
 form the **neural network** itself.
