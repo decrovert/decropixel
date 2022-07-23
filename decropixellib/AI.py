@@ -53,10 +53,6 @@ class NeuralNetwork:
         for i in range(self.IMAGE_SIZE):
             self.layers[0][i].stimulation = random.random() * 2 - 1
     
-    def rewire_connections(self) -> None:
-        for i in range(len(self.connections)):
-            self.connections[i] = random.random() * 2 - 1
-    
     def produce_output_image(self) -> None:
         layer: typing.Sized = 1
         connection_index: typing.Sized = 0
@@ -84,6 +80,7 @@ class NeuralNetwork:
     
     def apply_feedback(self, feedback: float) -> None:
         feedback_adapted = feedback / 10 - 0.5
+        print(feedback_adapted)
 
         for layer in self.layers:
             for neuron in layer:
@@ -91,12 +88,16 @@ class NeuralNetwork:
                     neuron.bias += -feedback_adapted
                 elif neuron.bias > 0:
                     neuron.bias += feedback_adapted
+        
+        for connection in self.connections:
+            if connection < 0:
+                connection += -feedback_adapted
+            elif connection > 0:
+                connection += feedback_adapted
     
     def learn_image(self, image: list[bool]) -> None:
         for i in range(self.IMAGE_SIZE):
             self.layers[self.NETWORK_SIZE - 1][i].stimulation = float(image[i]) - 0.5
-        
-        self.rewire_connections()
 
         layer: typing.Sized = self.NETWORK_SIZE - 2
         connection_index: typing.Sized = len(self.connections) - 1
@@ -116,11 +117,10 @@ class NeuralNetwork:
 
 class AI:
     def __init__(self, IMAGE_WIDTH: typing.Sized, IMAGE_HEIGHT: typing.Sized, DATA_FILE_NAME: str):
-        self.neural_network = NeuralNetwork(IMAGE_WIDTH, IMAGE_HEIGHT, 5, DATA_FILE_NAME)
+        self.neural_network = NeuralNetwork(IMAGE_WIDTH, IMAGE_HEIGHT, 8, DATA_FILE_NAME)
 
     def draw_image(self) -> list[bool]:
         self.neural_network.populate_input_neurons()
-        self.neural_network.rewire_connections()
         self.neural_network.produce_output_image()
         return self.neural_network.get_output_image()
     
