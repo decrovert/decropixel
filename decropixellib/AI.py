@@ -65,10 +65,10 @@ class NeuralNetwork:
                 neuron_stimulation: float = self.layers[layer - 1][neuron].stimulation
 
                 for _ in range(self.IMAGE_SIZE):
-                    neuron_stimulation += self.connections[connection_index]
+                    neuron_stimulation += self.connections[connection_index] / 100
                     connection_index += 1
                 
-                neuron_stimulation += self.layers[layer][neuron].bias
+                neuron_stimulation += self.layers[layer][neuron].bias / 10
                 self.layers[layer][neuron].stimulation = neuron_stimulation
 
             layer += 1
